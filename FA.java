@@ -22,18 +22,20 @@ public class FA {
     public boolean accepts(String str) {
         this.currentState = 0;
 
-        // This if for M3. It converts letters or digits to appropriate character in the alphabet.
         int alphabetIndex = -1; // initial state is false;
+
+        // for empty strings
         if (str == "") {
+            // final character in the alphabet for all M's is for empty string
             alphabetIndex = alphabet.length() - 1;
             this.currentState = transitions[this.currentState][alphabetIndex];
             return finalStates[currentState];
-        }else if (str.matches(".*[a-zA-Z].*")){
+        }else if (str.matches(".*[a-zA-Z].*")){ // for M3.txt...
                 for (int i = 0; i < str.length(); i++) {
                     char c = str.charAt(i); // get next character in string
                     if (Character.isLetter(c)) { // if character is a letter, then it's a 0
                         alphabetIndex = 0;
-                    } else if (Character.isDigit(c)) { // if character is a digit, then its a 1
+                    } else if (Character.isDigit(c)) { // if character is a digit, then it's a 1
                         alphabetIndex = 1;
                     } else {
                         return false; // if c is not in alphabet, return false;

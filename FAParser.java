@@ -53,8 +53,7 @@ public class FAParser {
             // get all the transitions
             while ((nextLine = br2.readLine()) != null) {
                 if (nextLine.startsWith("(")) {
-                    // Remove parenthesis
-                    nextLine = nextLine.substring(1, nextLine.length() - 1);
+                    nextLine = nextLine.substring(1, nextLine.length() - 1); // Remove parenthesis
                     String[] tempStrArr = nextLine.split("\\s+");
                     int currentState = Integer.parseInt(tempStrArr[0]);
                     int alphaIndex = alphabet.indexOf(tempStrArr[1]);
@@ -69,7 +68,6 @@ public class FAParser {
         }
     }
 
-    // Add getters to access the parsed data
     public int getStates() {
         return states;
     }
