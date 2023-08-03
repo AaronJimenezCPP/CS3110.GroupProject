@@ -23,10 +23,13 @@ public class Main {
             System.out.println("\n==================");
             System.out.println(filename  + " Results");
             System.out.println("==================");
+            System.out.print(m.info());
+            System.out.println("==================");
             for (String str : parser.getTestStrings()) {
                 accepted = m.accepts(str);
                 System.out.println((accepted ? "Accepted": "Rejected") + ": " + str);
             }
+            System.out.println("==================");
         }
     }
 }

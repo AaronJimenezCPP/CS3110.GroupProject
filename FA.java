@@ -1,3 +1,5 @@
+import java.util.ArrayList;
+import java.util.List;
 
 public class FA {
     // # of states
@@ -58,5 +60,62 @@ public class FA {
         }
         
         return finalStates[currentState];
+    }
+
+    public String info() {
+        return statesInfo() + finalStatesInfo() + alphabetInfo() + transitionInfo();
+    }
+
+    public String statesInfo() {
+        String str = "States: {";
+        for (int i = 0; i < states; i++) {
+            str += i;
+            if (i < states - 1)
+                str += ", ";
+        }
+
+        return str + "}" + "\n";
+    }
+
+    public String finalStatesInfo() {
+        List<Integer> finalList = new ArrayList<>();
+
+        for (int i = 0; i < finalStates.length; i++) {
+            if (finalStates[i]) finalList.add(i);
+        }
+
+        String str = "Final States: {";
+        for (int i = 0; i < finalList.size(); i++) {
+            str += finalList.get(i);
+            if (i < finalList.size() - 1)
+                str += ", ";
+        }
+
+        return str + "}" + "\n";
+    }
+
+    public String alphabetInfo() {
+        String str = "Alphabet: {";
+
+        for (int i = 0; i < alphabet.length(); i++) {
+            str += alphabet.charAt(i);
+            if (i < alphabet.length() - 1) 
+                str += ", ";
+        }
+
+        return str + "}" + "\n";
+    }
+
+    public String transitionInfo() {
+        String str = "Transitions:" + "\n";
+
+        for (int i = 0; i < transitions.length; i++) {
+            int[] stateTransitions = transitions[i];
+            for (int j = 0; j < stateTransitions.length; j++) {
+                str += "\t" + i + " " + alphabet.charAt(j) + " " + transitions[i][j] + "\n";
+            }
+        }
+
+        return str;
     }
 }
