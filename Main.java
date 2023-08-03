@@ -19,14 +19,24 @@ public class Main {
                     parser.getTransitions()
             );
 
+            DisplayInfo info = new DisplayInfo(parser);
+            System.out.println(info.formatOutput());
             boolean accepted;
-            System.out.println("\n==================");
-            System.out.println(filename  + " Results");
-            System.out.println("==================");
+            System.out.println("Results of test strings:");
             for (String str : parser.getTestStrings()) {
                 accepted = m.accepts(str);
-                System.out.println((accepted ? "Accepted": "Rejected") + ": " + str);
+                String result = accepted ? "Accepted" : "Rejected";
+
+                // Calculate the number of spaces needed for alignment
+                int numSpaces = Math.max(1, 15 - str.length()); // Adjust the alignment width as needed
+
+                // Create a string with the calculated number of spaces
+                String spaces = new String(new char[numSpaces]).replace('\0', ' ');
+
+                // Print the aligned output
+                System.out.println(str + spaces + result);
             }
+            System.out.println('\n');
         }
     }
 }

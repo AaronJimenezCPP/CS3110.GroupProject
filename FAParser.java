@@ -7,6 +7,7 @@ public class FAParser {
     private int states;
     private boolean[] finalStates;
     private int[][] transitions;
+    private StringBuilder stringBuilder = new StringBuilder();
     private String alphabet;
     private ArrayList<String> testStrings = new ArrayList<>();
 
@@ -54,6 +55,7 @@ public class FAParser {
             while ((nextLine = br2.readLine()) != null) {
                 if (nextLine.startsWith("(")) {
                     nextLine = nextLine.substring(1, nextLine.length() - 1); // Remove parenthesis
+                    stringBuilder.append("\t").append(nextLine).append('\n');
                     String[] tempStrArr = nextLine.split("\\s+");
                     int currentState = Integer.parseInt(tempStrArr[0]);
                     int alphaIndex = alphabet.indexOf(tempStrArr[1]);
@@ -86,5 +88,9 @@ public class FAParser {
 
     public ArrayList<String> getTestStrings() {
         return testStrings;
+    }
+
+    public StringBuilder getStringBuilder(){
+        return stringBuilder;
     }
 }
