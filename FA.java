@@ -22,45 +22,48 @@ public class FA {
     }
 
     public boolean accepts(String str) {
+        // State 0 is initial state by definition
         this.currentState = 0;
 
         // Empty string
-        if (str.equals("") || str.equals("Λ")) {
-            // If initial state is final state
+        if (str.equals("") || str.equals("Λ")) 
+            // If initial state is a final state
             return finalStates[currentState];
-        }
         else { 
             for (int i = 0; i < str.length(); i++) {
-                char c = str.charAt(i); // get next character in string
+                // Get next char in string
+                char c = str.charAt(i); 
+                // Get index of char in alphabet
                 int alphabetIndex = alphabet.indexOf(c);
 
-                // if c is not in the alphabet, return false
+                // if raw char is not in the alphabet
                 if (alphabetIndex == -1) {
-                    if (Character.isAlphabetic(c)) {
+                    // If alphabbetic, search for greek Α in alphabet 
+                    if (Character.isAlphabetic(c)) 
                         alphabetIndex = alphabet.indexOf('Α');
-                    }
-                    else if (Character.isDigit(c)) {
+                    // If digit, search for Δ in alphabet
+                    else if (Character.isDigit(c)) 
                         alphabetIndex = alphabet.indexOf('Δ');
-                    }
 
-                    if (alphabetIndex == -1) {
+                    // If still not found, reject
+                    if (alphabetIndex == -1) 
                         return false;
-                    }  
                 }
                 
-                // -1 means no valid transition, which means reject
-                if (transitions[this.currentState][alphabetIndex] != -1) {
+                // -1 means no valid transition, reject
+                if (transitions[this.currentState][alphabetIndex] == -1) 
                     return false;
-                }
                 
-                // Transition to next state using this current state and char's index in the alphabet
+                // Transition to next state using current state and char's index in the alphabet
                 this.currentState = transitions[this.currentState][alphabetIndex];
             }
         }
         
+        // If ended in a final state
         return finalStates[currentState];
     }
 
+    // Return an info string about this FA
     public String info() {
         return statesInfo() + finalStatesInfo() + alphabetInfo() + transitionInfo();
     }
@@ -69,8 +72,7 @@ public class FA {
         String str = "States: {";
         for (int i = 0; i < states; i++) {
             str += i;
-            if (i < states - 1)
-                str += ", ";
+            if (i < states - 1) str += ", ";
         }
 
         return str + "}" + "\n";
@@ -86,8 +88,7 @@ public class FA {
         String str = "Final States: {";
         for (int i = 0; i < finalList.size(); i++) {
             str += finalList.get(i);
-            if (i < finalList.size() - 1)
-                str += ", ";
+            if (i < finalList.size() - 1) str += ", ";
         }
 
         return str + "}" + "\n";
@@ -98,8 +99,7 @@ public class FA {
 
         for (int i = 0; i < alphabet.length(); i++) {
             str += alphabet.charAt(i);
-            if (i < alphabet.length() - 1) 
-                str += ", ";
+            if (i < alphabet.length() - 1) str += ", ";
         }
 
         return str + "}" + "\n";
@@ -113,8 +113,7 @@ public class FA {
             for (int j = 0; j < stateTransitions.length; j++) {
                 if (transitions[i][j] != -1) {
                     str += "\t" + i + " " + alphabet.charAt(j) + " " + transitions[i][j] + "\n";
-                }
-                
+                } 
             }
         }
 

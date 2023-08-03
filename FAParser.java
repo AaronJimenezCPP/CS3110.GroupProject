@@ -2,24 +2,24 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 
 public class FAParser {
-    private int states;
-    private boolean[] finalStates;
-    private int[][] transitions;
-    private String alphabet;
-    private ArrayList<String> testStrings = new ArrayList<>();
+    public static ParsedFA fromFile(String filename) {
+        try (BufferedReader br = new BufferedReader(new FileReader(filename))) {
+            int states;
+            String alphabet;
+            boolean[] finalStates;
+            int[][] transitions;
+            ArrayList<String> testStrings = new ArrayList<>();
 
-    public FAParser(String fileName) {
-        try (BufferedReader br = new BufferedReader(new FileReader(fileName))) {
             // 1st line is # states
             states = Integer.parseInt(br.readLine());
 
             // 2nd line is final states, separated by spaces
             finalStates = new boolean[states];
-            for (String str : br.readLine().trim().split("\\s+")) {
+            for (String str : br.readLine().trim().split("\\s+")) 
                 finalStates[Integer.parseInt(str)] = true;
-            }
 
             // 3rd line is alphabet, separated by spaces
             alphabet = br.readLine().replace(" ", "");
@@ -49,32 +49,25 @@ public class FAParser {
                     transitions[currentState][alphaIndex] = newState;
                 }
                 // A test string
-                else {
+                else 
                     testStrings.add(thisLine);
-                }
             }
-        } catch (IOException e) {
+
+            return new ParsedFA(new FA(states, alphabet, finalStates, transitions), testStrings);
+        } 
+        catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
+}
 
-    public int getStates() {
-        return states;
-    }
+// For returning parsed FA and test strings
+class ParsedFA {
+    FA m;
+    List<String> testStrings;
 
-    public boolean[] getFinalStates() {
-        return finalStates;
-    }
-
-    public int[][] getTransitions() {
-        return transitions;
-    }
-
-    public String getAlphabet() {
-        return alphabet;
-    }
-
-    public ArrayList<String> getTestStrings() {
-        return testStrings;
+    public ParsedFA(FA m, List<String> testStrings) {
+        this.m = m;
+        this.testStrings = testStrings;
     }
 }
