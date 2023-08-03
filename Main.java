@@ -1,17 +1,28 @@
+
 public class Main {
     public static void main(String[] args) {
-        System.out.println("Hello world!");
-        
-        FA m1 = new FA(
-            2,
-            "01",
-            new boolean[] {false, true},
-            new int[][] {
-                {1, 0}, // From state 0
-                {1, 0}, // From state 1
-            }
-        );
+        FA m;
+        FAParser parser;
 
-        System.out.println("M1 accepts 11010: " + m1.accepts("11010"));
+        for(int i = 1; i <= 4; i++){
+            String filename = "M" + i + ".txt";
+            parser = new FAParser(filename);
+
+            m = new FA(
+                    parser.getStates(),
+                    parser.getAlphabet(),
+                    parser.getFinalStates(),
+                    parser.getTransitions()
+            );
+
+            boolean accepted;
+            System.out.println("\n==================");
+            System.out.println(filename  + " Results");
+            System.out.println("==================");
+            for (String str : parser.getTestStrings()) {
+                accepted = m.accepts(str);
+                System.out.println((accepted ? "Accepted": "Rejected") + ": " + str);
+            }
+        }
     }
 }
