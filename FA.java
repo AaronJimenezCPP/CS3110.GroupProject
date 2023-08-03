@@ -27,12 +27,11 @@ public class FA {
         int alphabetIndex = -1; // initial state is false;
 
         // for empty strings
-        if (str == "") {
-            // final character in the alphabet for all M's is for empty string
-            alphabetIndex = alphabet.length() - 1;
-            this.currentState = transitions[this.currentState][alphabetIndex];
+        if (str == "" || str == "\u039B") {
+            // True if initial state is final state
             return finalStates[currentState];
-        }else if (str.matches(".*[a-zA-Z].*")){ // for M3.txt...
+        }
+        else if (str.matches(".*[a-zA-Z].*")){ // for M3.txt...
                 for (int i = 0; i < str.length(); i++) {
                     char c = str.charAt(i); // get next character in string
                     if (Character.isLetter(c)) { // if character is a letter, then it's a 0
@@ -45,7 +44,8 @@ public class FA {
                     // Transition to next state using this current state and char's index in the alphabet
                     this.currentState = transitions[this.currentState][alphabetIndex];
                 }
-        } else { // for all the other Machines
+        } 
+        else { // for all the other Machines
             for (int i = 0; i < str.length(); i++) {
                 char c = str.charAt(i); // get next character in string
                 alphabetIndex = alphabet.indexOf(c);
@@ -54,8 +54,14 @@ public class FA {
                 if (alphabetIndex == -1) {
                     return false;
                 }
+                
                 // Transition to next state using this current state and char's index in the alphabet
-                this.currentState = transitions[this.currentState][alphabetIndex];
+                if (transitions[this.currentState][alphabetIndex] != -1) {
+                    this.currentState = transitions[this.currentState][alphabetIndex];
+                }
+                else {
+                    return false;
+                }
             }
         }
         

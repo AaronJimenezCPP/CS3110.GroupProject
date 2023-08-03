@@ -12,55 +12,45 @@ public class FAParser {
 
     public FAParser(String fileName) {
         try (BufferedReader br = new BufferedReader(new FileReader(fileName))) {
-            // Read first line to get the number of states
+            // 1st line is # states
             states = Integer.parseInt(br.readLine());
-            finalStates = new boolean[states];
 
-            // Get all the final states, use loop in case of multiple states
-            String nextLine = br.readLine();
-            String[] tempArr = nextLine.trim().split("\\s+");
-            for (String str : tempArr) {
-                int tempNum = Integer.parseInt(str);
-                finalStates[tempNum] = true;
+            // 2nd line is final states, separated by spaces
+            finalStates = new boolean[states];
+            for (String str : br.readLine().trim().split("\\s+")) {
+                finalStates[Integer.parseInt(str)] = true;
             }
 
-            // reads alphabet line
-            nextLine = br.readLine();
-            // removes spaces from the string
-            alphabet = nextLine.replace(" ", "");
+            // 3rd line is alphabet, separated by spaces
+            alphabet = br.readLine().replace(" ", "");
 
-            // Count the number of lines with parentheses to determine the number of rows
-            int numRows = 0;
-            while ((nextLine = br.readLine()) != null) {
-                if (nextLine.startsWith("(")) {
-                    numRows++;
+            // Next lines are transitions
+            // Initialize transitions to -1 (signifies non-existing transition)
+            transitions = new int[states][alphabet.length()];
+            for (int i = 0; i < transitions.length; i++) {
+                for (int j = 0; j < transitions[i].length; j++) {
+                    transitions[i][j] = -1;
                 }
             }
-
-            // Initialize the 2D array with the determined number of rows and columns
-            int numColumns = alphabet.length();
-            transitions = new int[numRows][numColumns];
-
-            // Reset the reader to read from the beginning of the file
-            br.close();
-            BufferedReader br2 = new BufferedReader(new FileReader(fileName));
-
-            // Skip the first three lines (already read above)
-            br2.readLine();
-            br2.readLine();
-            br2.readLine();
-
-            // get all the transitions
-            while ((nextLine = br2.readLine()) != null) {
-                if (nextLine.startsWith("(")) {
-                    nextLine = nextLine.substring(1, nextLine.length() - 1); // Remove parenthesis
-                    String[] tempStrArr = nextLine.split("\\s+");
-                    int currentState = Integer.parseInt(tempStrArr[0]);
-                    int alphaIndex = alphabet.indexOf(tempStrArr[1]);
-                    int value = Integer.parseInt(tempStrArr[2]);
-                    transitions[currentState][alphaIndex] = value;
-                } else { // once transitions are done, get the test strings
-                    testStrings.add(nextLine);
+            
+            // Loop through rest of lines, which are either transition or test string 
+            String thisLine;
+            while ((thisLine = br.readLine()) != null) {
+                // A transition
+                if (thisLine.startsWith("(")) {
+                    // Remove parenthesis
+                    thisLine = thisLine.replace("(", "").replace(")", ""); 
+                    
+                    // Read current state, alphabet index, and new state. Add to transitions table
+                    String[] split = thisLine.split("\\s+");
+                    int currentState = Integer.parseInt(split[0]);
+                    int alphaIndex = alphabet.indexOf(split[1]);
+                    int newState = Integer.parseInt(split[2]);
+                    transitions[currentState][alphaIndex] = newState;
+                }
+                // A test string
+                else {
+                    testStrings.add(thisLine);
                 }
             }
         } catch (IOException e) {
