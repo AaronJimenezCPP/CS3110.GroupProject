@@ -5,7 +5,7 @@ public class Main {
         FAParser parser;
 
         // iterate through all the files
-        for(int i = 1; i <= 2; i++){
+        for(int i = 1; i <= 4; i++){
             String filename = "M" + i + ".txt";
 
             // used to get the values from the files

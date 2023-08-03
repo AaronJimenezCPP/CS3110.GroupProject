@@ -24,44 +24,37 @@ public class FA {
     public boolean accepts(String str) {
         this.currentState = 0;
 
-        int alphabetIndex = -1; // initial state is false;
-
-        // for empty strings
-        if (str == "" || str == "\u039B") {
-            // True if initial state is final state
+        // Empty string
+        if (str.equals("") || str.equals("Λ")) {
+            // If initial state is final state
             return finalStates[currentState];
         }
-        else if (str.matches(".*[a-zA-Z].*")){ // for M3.txt...
-                for (int i = 0; i < str.length(); i++) {
-                    char c = str.charAt(i); // get next character in string
-                    if (Character.isLetter(c)) { // if character is a letter, then it's a 0
-                        alphabetIndex = 0;
-                    } else if (Character.isDigit(c)) { // if character is a digit, then it's a 1
-                        alphabetIndex = 1;
-                    } else {
-                        return false; // if c is not in alphabet, return false;
-                    }
-                    // Transition to next state using this current state and char's index in the alphabet
-                    this.currentState = transitions[this.currentState][alphabetIndex];
-                }
-        } 
-        else { // for all the other Machines
+        else { 
             for (int i = 0; i < str.length(); i++) {
                 char c = str.charAt(i); // get next character in string
-                alphabetIndex = alphabet.indexOf(c);
+                int alphabetIndex = alphabet.indexOf(c);
 
                 // if c is not in the alphabet, return false
                 if (alphabetIndex == -1) {
+                    if (Character.isAlphabetic(c)) {
+                        alphabetIndex = alphabet.indexOf('Α');
+                    }
+                    else if (Character.isDigit(c)) {
+                        alphabetIndex = alphabet.indexOf('Δ');
+                    }
+
+                    if (alphabetIndex == -1) {
+                        return false;
+                    }  
+                }
+                
+                // -1 means no valid transition, which means reject
+                if (transitions[this.currentState][alphabetIndex] != -1) {
                     return false;
                 }
                 
                 // Transition to next state using this current state and char's index in the alphabet
-                if (transitions[this.currentState][alphabetIndex] != -1) {
-                    this.currentState = transitions[this.currentState][alphabetIndex];
-                }
-                else {
-                    return false;
-                }
+                this.currentState = transitions[this.currentState][alphabetIndex];
             }
         }
         
@@ -118,7 +111,10 @@ public class FA {
         for (int i = 0; i < transitions.length; i++) {
             int[] stateTransitions = transitions[i];
             for (int j = 0; j < stateTransitions.length; j++) {
-                str += "\t" + i + " " + alphabet.charAt(j) + " " + transitions[i][j] + "\n";
+                if (transitions[i][j] != -1) {
+                    str += "\t" + i + " " + alphabet.charAt(j) + " " + transitions[i][j] + "\n";
+                }
+                
             }
         }
 
